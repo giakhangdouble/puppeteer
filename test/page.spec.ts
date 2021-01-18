@@ -388,6 +388,33 @@ describe('Page', function () {
     });
   });
 
+  describeFailsFirefox('Page.emulateNetworkConditions', function () {
+    it('should work', async () => {
+      const { page, server, puppeteer } = getTestState();
+
+      const offline = puppeteer.networkConditions['Offline'];
+      const online = puppeteer.networkConditions['Online'];
+
+      await page.emulateNetworkConditions(offline);
+      let error = null;
+      await page.goto(server.EMPTY_PAGE).catch((error_) => (error = error_));
+      expect(error).toBeTruthy();
+      await page.emulateNetworkConditions(online);
+      const response = await page.reload();
+      expect(response.status()).toBe(200);
+    });
+
+    it('should emulate navigator.onLine', async () => {
+      const { page } = getTestState();
+
+      expect(await page.evaluate(() => window.navigator.onLine)).toBe(true);
+      await page.setOfflineMode(true);
+      expect(await page.evaluate(() => window.navigator.onLine)).toBe(false);
+      await page.setOfflineMode(false);
+      expect(await page.evaluate(() => window.navigator.onLine)).toBe(true);
+    });
+  });
+
   describe('ExecutionContext.queryObjects', function () {
     itFailsFirefox('should work', async () => {
       const { page } = getTestState();
