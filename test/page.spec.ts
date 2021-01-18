@@ -414,7 +414,7 @@ describe('Page', function () {
       expect(await page.evaluate(() => window.navigator.onLine)).toBe(true);
     });
 
-    it.only('should change navigator.connection.effectiveType', async () => {
+    it('should change navigator.connection.effectiveType', async () => {
       const { page, puppeteer } = getTestState();
 
       const slow3G = puppeteer.networkConditions['Slow 3G'];
@@ -438,50 +438,6 @@ describe('Page', function () {
         // @ts-ignore Experimental APIs are not included in lib.d.ts
         await page.evaluate(() => window.navigator.connection.effectiveType)
       ).toBe('2g');
-      await page.emulateNetworkConditions(online);
-    });
-
-    it.only('should change navigator.connection.downlink', async () => {
-      const { page, puppeteer } = getTestState();
-
-      const slow3G = puppeteer.networkConditions['Slow 3G'];
-      const fast3G = puppeteer.networkConditions['Fast 3G'];
-      const online = puppeteer.networkConditions['Online'];
-
-      await page.emulateNetworkConditions(fast3G);
-      expect(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore Experimental APIs are not included in lib.d.ts
-        await page.evaluate(() => window.navigator.connection.downlink)
-      ).toBe('1.45');
-      await page.emulateNetworkConditions(slow3G);
-      expect(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore Experimental APIs are not included in lib.d.ts
-        await page.evaluate(() => window.navigator.connection.downlink)
-      ).toBe('0.4');
-      await page.emulateNetworkConditions(online);
-    });
-
-    it.only('should change navigator.connection.rrt', async () => {
-      const { page, puppeteer } = getTestState();
-
-      const slow3G = puppeteer.networkConditions['Slow 3G'];
-      const fast3G = puppeteer.networkConditions['Fast 3G'];
-      const online = puppeteer.networkConditions['Online'];
-
-      await page.emulateNetworkConditions(fast3G);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore Experimental APIs are not included in lib.d.ts
-      expect(await page.evaluate(() => window.navigator.connection.rrt)).toBe(
-        '550'
-      );
-      await page.emulateNetworkConditions(slow3G);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore Experimental APIs are not included in lib.d.ts
-      expect(await page.evaluate(() => window.navigator.connection.rrt)).toBe(
-        '2000'
-      );
       await page.emulateNetworkConditions(online);
     });
   });
