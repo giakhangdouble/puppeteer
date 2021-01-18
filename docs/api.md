@@ -615,8 +615,8 @@ const browser = await puppeteer.launch({
 #### puppeteer.networkConditions
 - returns: <[Object]>
 
-Returns a list of network conditions to be used with [`page.emulateNetworkConditions(networkConditions)`](#pageemulatenetworkConditions). Actual list of
-devices can be found in [`src/common/NetworkConditions.ts`](https://github.com/puppeteer/puppeteer/blob/main/src/common/NetworkConditions.ts).
+Returns a list of network conditions to be used with [`page.emulateNetworkConditions(networkConditions)`](#pageemulatenetworkconditionsnetworkconditions). Actual list of
+conditions can be found in [`src/common/NetworkConditions.ts`](https://github.com/puppeteer/puppeteer/blob/main/src/common/NetworkConditions.ts).
 
 ```js
 const puppeteer = require('puppeteer');
@@ -1464,10 +1464,14 @@ await page.evaluate(() => matchMedia('print').matches);
 ```
 
 #### page.emulateNetworkConditions(networkConditions) 
-- `networkConditions` <[NetworkConditions]> Network conditions to emulate.
+- `networkConditions` <[Object]> Network conditions to emulate.
+  - `download` <[number]> Download speed (bytes/s), `-1` to disable
+  - `upload` <[number]> Upload speed (bytes/s), `-1` to disable
+  - `latency` <[number]> Latency (ms), `0` to disable
+  - `connectionType` <?["none"| "cellular2g"| "cellular3g"| "cellular4g"| "bluetooth"| "ethernet"| "wifi"| "wimax"| "other"] Optional connection type
 - returns: <[Promise]>
 
-Note: This will not affect WebSockets and WebRTC PeerConnections (https://crbug.com/563644)
+> **NOTE** This does not affect WebSockets and WebRTC PeerConnections (https://crbug.com/563644)
 ```js
 const puppeteer = require('puppeteer');
 const slow3G = puppeteer.networkConditions['Slow 3G'];
